@@ -1,11 +1,10 @@
-import { Text, StyleSheet, View, KeyboardAvoidingView, TouchableOpacity, TextInput, Image } from 'react-native'
-import React, { useState } from 'react'
-import { InputBox } from '../../components'
+import { Text, StyleSheet, View, KeyboardAvoidingView, TouchableOpacity, TextInput, Image, Keyboard } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { auth } from '../../config/FireBase/index'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -30,6 +29,17 @@ const Login = ({navigation}) => {
       })
   }
 
+  // buat kalo keyboardnya lagi muncul, ilangin si logo sama nama app
+  const [isKeyboardShown, setKeyboardStatus] = useState(false);
+  useEffect(() => {
+    Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardStatus(true);
+    })
+    Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardStatus(false);
+    })
+  }, [])
+
   // kondisi auth sign in accepted
   if (isSignedIn == true) {
     return (
@@ -52,31 +62,36 @@ const Login = ({navigation}) => {
       <KeyboardAvoidingView
         style={styles.container}
       >
-        <Image
-          source={require('../../../assets/appAssets/logo.png')}
-          style={
-            {
-              width: '30%',
-              height: '30%',
-              resizeMode: 'contain',
-              marginTop: -100
+        {!isKeyboardShown &&
+          <Image
+            source={require('../../../assets/image/logo.png')}
+            style={
+              {
+                width: '30%',
+                height: '30%',
+                resizeMode: 'contain',
+                marginTop: -100
+              }
             }
-          }
-        />
-        <Image
-          source={require('../../../assets/appAssets/appname.png')}
-          style={
-            {
-              width: '30%',
-              height: '30%',
-              resizeMode: 'contain',
-              marginTop: -100,
-              marginBottom: -40
+          />
+        }
+        {!isKeyboardShown &&
+          <Image
+            source={require('../../../assets/image/appname.png')}
+            style={
+              {
+                width: '30%',
+                height: '30%',
+                resizeMode: 'contain',
+                marginTop: -100,
+                marginBottom: -40
+              }
             }
-          }
-        />
-        
-        <View style={styles.inputContainer}> 
+          />
+        }
+
+
+        <View style={styles.inputContainer}>
           {/* input email */}
           <TextInput
             placeholder="Email"
