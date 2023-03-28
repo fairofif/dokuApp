@@ -1,33 +1,41 @@
 import { Text, StyleSheet, View, KeyboardAvoidingView, TouchableOpacity, TextInput, Image, Keyboard } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { auth } from '../../config/FireBase/index'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
-
 
 const Login = ({ navigation }) => {
-  const [isSignedIn, setIsSignedIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [dataLogin, setDataLogin] = useState([]);
 
-  const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((re) => {
-        console.log(re);
-      })
-      .catch((re) => {
-        console.log(re);
-      })
-  }
+//asynchronous
 
+//async-await
+//promise
   const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((re) => {
-        setIsSignedIn(true);
+    fetchDataLogin();
+    if (dataLogin.status) {
+      navigation.navigate('GroupList', {email, navigation});
+    }
+  }
+
+  const fetchDataLogin = async () => {
+    const url = "https://wakacipuy.my.id/dokuApp/login/" + email + "/" + password;
+    const valLog = await fetch(url)
+      .then(res => {
+        return res.json();
       })
-      .catch((re) => {
-        console.log(re);
+      .then(res => {
+        setData(res);
+        return (res); // would return to valLog
+      })
+      .catch(err => {
+        console.log(err);
       })
   }
+  
+  const setData = async (value) => {
+    await setDataLogin(value)
+  }
+
 
   // buat kalo keyboardnya lagi muncul, ilangin si logo sama nama app
   const [isKeyboardShown, setKeyboardStatus] = useState(false);
@@ -40,98 +48,80 @@ const Login = ({ navigation }) => {
     })
   }, [])
 
-  // kondisi auth sign in accepted
-  if (isSignedIn == true) {
-    return (
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+    >
+      {!isKeyboardShown &&
+        <Image
+          source={require('../../../assets/image/logo.png')}
+          style={
+            {
+              width: '30%',
+              height: '30%',
+              resizeMode: 'contain',
+              marginTop: -100
+            }
+          }
+        />
+      }
+      {!isKeyboardShown &&
+        <Image
+          source={require('../../../assets/image/appname.png')}
+          style={
+            {
+              width: '30%',
+              height: '30%',
+              resizeMode: 'contain',
+              marginTop: -100,
+              marginBottom: -40
+            }
+          }
+        />
+      }
+
+      <View style={styles.inputContainer}>
+        {/* input email */}
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={text => setEmail(text)}
+          style={styles.inputBox}
+        />
+        {/* input pass */}
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={text => setPassword(text)}
+          style={styles.inputBox}
+          secureTextEntry
+        />
+      </View>
       <View style={styles.buttonContainer}>
+        {/* button login */}
         <TouchableOpacity
-          onPress={() => navigation.navigate('GroupList')}
+          onPress={handleLogin}
           style={styles.button}
         >
           <Text style={styles.buttonTextLogin}>
-            Lanjut
+            Login
+          </Text>
+        </TouchableOpacity>
+
+        {/* button register */}
+        <TouchableOpacity
+          onPress={() => {}}
+          style={[styles.button, styles.buttonOutline]}
+        >
+          <Text style={styles.buttonTextRegister}>
+            Register
           </Text>
         </TouchableOpacity>
       </View>
-    )
-  }
+    </KeyboardAvoidingView>
+  )
 
-  // Kondisi belum login
-  else {
-    return (
-      <KeyboardAvoidingView
-        style={styles.container}
-      >
-        {!isKeyboardShown &&
-          <Image
-            source={require('../../../assets/image/logo.png')}
-            style={
-              {
-                width: '30%',
-                height: '30%',
-                resizeMode: 'contain',
-                marginTop: -100
-              }
-            }
-          />
-        }
-        {!isKeyboardShown &&
-          <Image
-            source={require('../../../assets/image/appname.png')}
-            style={
-              {
-                width: '30%',
-                height: '30%',
-                resizeMode: 'contain',
-                marginTop: -100,
-                marginBottom: -40
-              }
-            }
-          />
-        }
-
-
-        <View style={styles.inputContainer}>
-          {/* input email */}
-          <TextInput
-            placeholder="Email"
-            value={email}
-            onChangeText={text => setEmail(text)}
-            style={styles.inputBox}
-          />
-          {/* input pass */}
-          <TextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={text => setPassword(text)}
-            style={styles.inputBox}
-            secureTextEntry
-          />
-        </View>
-        <View style={styles.buttonContainer}>
-          {/* button login */}
-          <TouchableOpacity
-            onPress={handleLogin}
-            style={styles.button}
-          >
-            <Text style={styles.buttonTextLogin}>
-              Login
-            </Text>
-          </TouchableOpacity>
-
-          {/* button register */}
-          <TouchableOpacity
-            onPress={handleSignUp}
-            style={[styles.button, styles.buttonOutline]}
-          >
-            <Text style={styles.buttonTextRegister}>
-              Register
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    )
-  }
 }
 
 export default Login;

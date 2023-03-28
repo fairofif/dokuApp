@@ -1,10 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
-import React from 'react'
+import React, { } from 'react'
 import { useFonts } from 'expo-font'
 import NameWrapper from './listnamewrapper'
+import { ScrollView } from 'react-native-gesture-handler'
 
 
-const GroupCard = ({ groupname, hostname, numberofmember, balance }) => {
+const GroupCard = ({ navigation, groupname, numberofmember, balance, listmember, email }) => {
 
   const [fontLoaded] = useFonts({
     ComfortaaBold: require("../../assets/fonts/Comfortaa-Bold.ttf"),
@@ -14,18 +15,10 @@ const GroupCard = ({ groupname, hostname, numberofmember, balance }) => {
 
   if (!fontLoaded) return null;
 
-  const listUser = [
-    {
-      email: "rofif@gmail.com"
-    },
-    {
-      email: "aldicoboyjunior@gmail.com"
-    },
-    {
-      email: "rezacoboyjunior@gmail.com"
-    }
-  ]
-
+  const openGroup = () => {
+    navigation.navigate("Dashboard", {email, groupname});
+  }
+  
 
   return (
     <View style={styles.cardContainer}>
@@ -35,10 +28,10 @@ const GroupCard = ({ groupname, hostname, numberofmember, balance }) => {
           <Text style={styles.fontNumberofMember}>{numberofmember} members</Text>
         </View>
       </View>
-      <View style={styles.NameListContainer}>
+      <View style={styles.NameListContainer}> 
         <FlatList
           horizontal={true}
-          data={listUser}
+          data={listmember}
           renderItem={({item}) => <NameWrapper name={item.email}/>}
           showsHorizontalScrollIndicator={false}
         />
@@ -55,7 +48,7 @@ const GroupCard = ({ groupname, hostname, numberofmember, balance }) => {
           Rp.{balance}
         </Text>
         <TouchableOpacity
-          onPress={() => {}}
+          onPress={openGroup}
           style={styles.buttonOpenGroup}
         >
           <Text style={{fontFamily: 'ComfortaaBold', fontSize: 16, color: 'white'}}>
@@ -71,13 +64,14 @@ export default GroupCard
 
 const styles = StyleSheet.create({
   cardContainer: {
-    height: 100,
-    width: '50%',
+    height: 120,
+    width: 250,
     backgroundColor: 'white',
     marginTop: 20,
     borderRadius: 14,
     shadowColor: '#68FCD6',
-    elevation: 20
+    elevation: 5,
+    marginHorizontal: 15
   },
   topWrapper: {
     marginTop: 4,
