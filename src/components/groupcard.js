@@ -16,7 +16,7 @@ const GroupCard = ({ navigation, groupname, numberofmember, balance, listmember,
   if (!fontLoaded) return null;
 
   const openGroup = () => {
-    navigation.navigate("Dashboard", {email, groupname});
+    navigation.navigate("Dashboard", {email, groupname, navigation});
   }
   
 

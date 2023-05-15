@@ -23,9 +23,6 @@ const GroupList = () => {
       })
   }, []);
 
-
-
-
   return (
     <View style={styles.mainContainer}>
       <View style={styles.searchContainer}>

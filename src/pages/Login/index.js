@@ -30,6 +30,9 @@ const Login = ({ navigation }) => {
       .catch(err => {
         console.log(err);
       })
+    if (valLog.status) {
+      navigation.navigate('GroupList', {email, navigation});
+    }
   }
   
   const setData = async (value) => {
