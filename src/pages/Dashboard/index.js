@@ -8,6 +8,7 @@ import DayTransaction from '../../components/daytransaction';
 const Dashboard = () => {
     const route = useRoute();
     const groupname = route.params.groupname;
+    const navigation = route.params.navigation;
     const [month, setMonth] = useState();
     const [year, setYear] = useState(0);
     const [date, setDate] = useState(new Date());
@@ -62,15 +63,15 @@ const Dashboard = () => {
     }
 
     const openAddTransaction = () => {
-      route.params.navigation.navigate("AddTransaction", {groupname})
+      navigation.navigate("AddTransaction", {groupname})
     }
 
     const openMemberList = () => {
-      route.params.navigation.navigate("MemberList", {groupname})
+      navigation.navigate("MemberList", {groupname})
     }
 
     const openWalletManagement = () => {
-      route.params.navigation.navigate("WalletManagement", {groupname})
+      navigation.navigate("WalletManagement", {groupname, navigation})
     }
 
     return (

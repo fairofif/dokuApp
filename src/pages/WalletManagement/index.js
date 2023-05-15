@@ -3,14 +3,18 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Image
+  Image,
+  FlatList
 } from 'react-native'
 import { useRoute } from '@react-navigation/native';
 import { useFonts } from 'expo-font'
 import { useEffect, useState } from 'react';
+import WalletCard from '../../components/walletcard';
 
 const WalletManagement = () => {
   const route = useRoute();
+  const navigation = route.params.navigation;
+  const groupname = route.params.groupname;
 
   const [numberState, setNumberState] = useState(0);
   const [dataBalance, setDataBalance] = useState(0);
@@ -25,15 +29,21 @@ const WalletManagement = () => {
           setDataBalance(json[0]["ballance"]);
       })
     const urlWallet = "https://wakacipuy.my.id/dokuApp/getWallet/"+route.params.groupname
-    const val = fetch(url)  
+    const val = fetch(urlWallet)  
       .then((response) => response.json())
       .then((json) =>  {
           setDataWallet(json);
       })
+    console.log(dataWallet)
   }, [numberState])
 
+  const changeNumberState = () => {
+    setNumberState(numberState+1);
+  }
 
-
+  const openAddWalletScreen = () => {
+    navigation.navigate("AddWallet", {groupname, navigation, setNumberState})
+  }
 
   const [fontLoaded] = useFonts({
     ComfortaaBold: require("../../../assets/fonts/Comfortaa-Bold.ttf"),
@@ -52,7 +62,7 @@ const WalletManagement = () => {
           />
         </TouchableOpacity>
         <Text style={styles.groupName} >
-          {route.params.groupname}
+          Wallet Management
         </Text>
       </View>
 
@@ -62,8 +72,25 @@ const WalletManagement = () => {
       </View>
 
       <View style={styles.contentContainer}>
-
+        <FlatList
+          data={dataWallet}
+          showsVerticalScrollIndicator={false}
+          renderItem={({item}) => 
+            <WalletCard
+              name={item.walletName}
+              balance={item.ballance}
+            />
+          }
+        />
       </View>
+      <TouchableOpacity style={styles.floatingButton}
+        onPress={openAddWalletScreen}
+      >
+        <Image 
+          style={styles.backButton}
+          source={require('../../../assets/image/plus.png')}
+        />
+      </TouchableOpacity>
     </View>
   )
 }
@@ -119,5 +146,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#292b2f",
     borderTopColor: "white",
     borderTopWidth: 1
-  }
+  },
+  floatingButton: {
+    backgroundColor: "#FEE75C",
+    width: "15%",
+    aspectRatio: 1,
+    position: "absolute",
+    right: 40,
+    bottom: 40,
+    borderRadius: 35,
+    alignItems: "center",
+    justifyContent: "center"
+  },
 })

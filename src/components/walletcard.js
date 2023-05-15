@@ -2,7 +2,7 @@ import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { useFonts } from 'expo-font'
 
-const TransactionWrapper = ({kind, incomeOutcomeKind, amount, fromWallet, toWallet}) => {
+const WalletCard = ({ name, balance }) => {
     const [fontLoaded] = useFonts({
         ComfortaaBold: require("../../assets/fonts/Comfortaa-Bold.ttf"),
         ComfortaaRegular: require("../../assets/fonts/Comfortaa-Regular.ttf"),
@@ -13,34 +13,33 @@ const TransactionWrapper = ({kind, incomeOutcomeKind, amount, fromWallet, toWall
 
     return (
         <View style={styles.wrapper}>
-            <Text style={styles.text}>
-                {kind}
+            <Text style={styles.textName}>
+                {name}
             </Text>
-            <Text style={styles.text}>
-                {fromWallet}
-            </Text>
-            <Text style={styles.text}>
-                Rp.{amount}
+            <Text style={styles.textName}>
+                Rp.{balance}
             </Text>
         </View>
     )
 }
 
-export default TransactionWrapper;
+export default WalletCard;
 
 const styles = StyleSheet.create({
     wrapper: {
-        height: 20,
+        backgroundColor: '#7289DA',
         width: "100%",
-        flexDirection: "row",
+        height: 30,
+        flexDirection: 'row',
         justifyContent: "space-between",
-        backgroundColor: "#7289DA",
-        borderBottomWidth: 0.5,
-        borderBottomColor: 'black'
+        alignItems: "center",
+        paddingHorizontal: 10,
+        borderTopColor: "white",
+        borderTopWidth: 0.3
     },
-    text: {
-        fontFamily: 'ComfortaaLight',
-        fontSize: 10,
-        color: 'white',
+    textName: {
+        fontFamily: 'ComfortaaRegular',
+        fontSize: 12,
+        color: "white"
     }
 })

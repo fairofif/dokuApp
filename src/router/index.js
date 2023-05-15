@@ -9,6 +9,7 @@ import MemberList from '../pages/MemberList';
 import TransactionDetails from '../pages/TransactionDetails';
 import WalletManagement from '../pages/WalletManagement';
 import WishList from '../pages/WishList';
+import AddWallet from '../pages/AddWallet';
 
 const Stack = createStackNavigator();
 
@@ -24,6 +25,7 @@ const Router = () => {
         <Stack.Screen name="TransactionDetails" component={TransactionDetails} options={{headerShown: false}} />
         <Stack.Screen name="WalletManagement" component={WalletManagement} options={{headerShown: false}} />
         <Stack.Screen name="WishList" component={WishList} options={{headerShown: false}} />
+        <Stack.Screen name="AddWallet" component={AddWallet} options={{headerShown: false}} />
     </Stack.Navigator>
   )
 }
