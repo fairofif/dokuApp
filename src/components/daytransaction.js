@@ -13,14 +13,13 @@ const DayTransaction = ({day, expense, transactiondata}) => {
     
       if (!fontLoaded) return null;
 
-      console.log(transactiondata)
       return (
         <View>
             <View style={styles.dayContainer}>
                 <Text style={styles.textDay}>
                     Day {day}
                 </Text>
-                <Text style={styles.textExpense}>
+                <Text style={[styles.textExpense, {color: expense < 0 ? "red":"green"}]}>
                     Rp.{expense}
                 </Text>
             </View>
@@ -33,6 +32,9 @@ const DayTransaction = ({day, expense, transactiondata}) => {
                             kind={item.kind}
                             fromWallet={item.fromWallet}
                             amount={item.amount}
+                            incomeOutcomeKind={item.IncomeOutcomeKind}
+                            toWallet={item.toWallet}
+                            createdBy={item.createdBy}
                         />
                     }
                 

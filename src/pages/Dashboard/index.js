@@ -8,26 +8,37 @@ import DayTransaction from '../../components/daytransaction';
 const Dashboard = () => {
     const route = useRoute();
     const groupname = route.params.groupname;
+    const email = route.params.email;
     const navigation = route.params.navigation;
     const [month, setMonth] = useState();
     const [year, setYear] = useState(0);
     const [date, setDate] = useState(new Date());
     const [transactionList, setTransactionList] = useState([]);
+    const [income, setIncome] = useState(0);
+    const [outcome, setOutcome] = useState(0);
+    const [numberState, setNumberState] = useState(0);
     
 
     useEffect(() => {
       setMonth(date.getMonth());
       setYear(date.getFullYear());
-      console.log(month)
+      
       const urlTransactionList = "https://wakacipuy.my.id/dokuApp/getTransaction/"+groupname+"/"+month+"/"+year 
       const li = fetch(urlTransactionList)
       .then((response) => response.json())
       .then((json) =>  {
         setTransactionList(json);
       })
-      console.log(urlTransactionList);
-      console.log(transactionList);
-    }, [date, month]);
+
+      const urlIncomeOutcom = "https://wakacipuy.my.id/dokuApp/getIncomeOutcome/Wakacipuy/April/year"
+      const urlIncomeOutcome = "https://wakacipuy.my.id/dokuApp/getIncomeOutcome/"+groupname+"/"+month+"/"+year
+      const li2 = fetch(urlIncomeOutcome)
+      .then((response) => response.json())
+      .then((json) =>  {
+        setIncome(json[0][0]['income']);
+        setOutcome(json[1][0]['outcome']);
+      })
+    }, [date, month, numberState]);
 
 
 
@@ -42,6 +53,10 @@ const Dashboard = () => {
     const changeMonthToString = (number) => {
       const arrMonth = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
       return arrMonth[number]
+    }
+
+    const incNumberState = () => {
+      setNumberState(numberState+1);
     }
 
     const prevMonth = () => {
@@ -63,7 +78,7 @@ const Dashboard = () => {
     }
 
     const openAddTransaction = () => {
-      navigation.navigate("AddTransaction", {groupname})
+      navigation.navigate("AddTransaction", {groupname, email, incNumberState})
     }
 
     const openMemberList = () => {
@@ -116,11 +131,11 @@ const Dashboard = () => {
             <View style={styles.expenseContainer}>
               <View style={styles.incomeContainer}>
                 <Text style={styles.expenseText}>Income</Text>
-                <Text style={styles.incomeMoneyText}>Rp.120000</Text>
+                <Text style={styles.incomeMoneyText}>Rp.{income}</Text>
               </View>
               <View style={styles.outcomeContainer}>
                 <Text style={styles.expenseText}>Outcome</Text>
-                <Text style={styles.outcomeMoneyText}>Rp.120000</Text>
+                <Text style={styles.outcomeMoneyText}>Rp.{outcome}</Text>
               </View>
             </View>
             
@@ -131,7 +146,7 @@ const Dashboard = () => {
                 renderItem={({item}) =>
                 <DayTransaction
                   day={item.day}
-                  expense={10000}
+                  expense={item.expense}
                   transactiondata={item.transactions}
                 />
               }
